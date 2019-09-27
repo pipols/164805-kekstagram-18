@@ -11,7 +11,8 @@ var DESCRIPTION_TEMPLATE = {
   LIKES: {
     MIN: 15,
     MAX: 200
-  }
+  },
+  NAMES: ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон']
 };
 
 var AMOUNT_DESCRIPTIONS = 25;
@@ -27,31 +28,35 @@ var getRandomArrayElement = function (elements) {
   return elements[getRandomInteger(0, elements.length - 1)];
 };
 
-var getPhotoDescription = function (amount) {
+var getPhotosData = function (amount) {
   var descriptions = [];
   for (var i = 0; i < amount; i++) {
     descriptions.push({
       url: 'photos/' + (i + 1) + '.jpg',
-      description: '',
-      likes: getRandomInteger(DESCRIPTION_TEMPLATE.LIKES.MIN, DESCRIPTION_TEMPLATE.LIKES.MAX) + '',
-      comments: getRandomArrayElement(DESCRIPTION_TEMPLATE.COMMENTS)
+      description: 'tro-lo-lo',
+      likes: getRandomInteger(DESCRIPTION_TEMPLATE.LIKES.MIN, DESCRIPTION_TEMPLATE.LIKES.MAX),
+      comments: [{
+        avatar: 'img/avatar-' + getRandomInteger(1, 6) + '.svg',
+        message: getRandomArrayElement(DESCRIPTION_TEMPLATE.COMMENTS),
+        name: getRandomArrayElement(DESCRIPTION_TEMPLATE.NAMES)
+      }]
     });
   }
   return descriptions;
 };
 
-var getPhotoNode = function (template, description) {
+var getPhotoNode = function (template, photoData) {
   var newNode = template.cloneNode(true);
-  newNode.querySelector('.picture__img').src = description.url;
-  newNode.querySelector('.picture__likes').textContent = description.likes;
-  newNode.querySelector('.picture__comments').textContent = description.comments;
+  newNode.querySelector('.picture__img').src = photoData.url;
+  newNode.querySelector('.picture__likes').textContent = photoData.likes;
+  newNode.querySelector('.picture__comments').textContent = photoData.comments.length;
   return newNode;
 };
 
 var accumulateNode = function (amount) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < amount; i++) {
-    var newNode = getPhotoNode(pictureTemplate, getPhotoDescription(amount)[i]);
+    var newNode = getPhotoNode(pictureTemplate, getPhotosData(amount)[i]);
     fragment.appendChild(newNode);
   }
   return fragment;
