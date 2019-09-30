@@ -19,6 +19,12 @@ var AMOUNT_DESCRIPTIONS = 25;
 
 var pictureTemplate = document.querySelector('#picture').content;
 var picturesList = document.querySelector('.pictures');
+var commentsList = document.querySelector('.social__comments');
+var comment = document.querySelector('.social__comment');
+var bigPictureImg = document.querySelector('.big-picture__img');
+var likesCount = document.querySelector('.likes-count');
+var commentsCount = document.querySelector('.comments-count');
+var socialCaption = document.querySelector('.social__caption');
 
 var getRandomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -64,26 +70,31 @@ var accumulateNode = function (amount) {
   return fragment;
 };
 
-picturesList.appendChild(accumulateNode(AMOUNT_DESCRIPTIONS));
+var picturesNode = accumulateNode(AMOUNT_DESCRIPTIONS);
+
+picturesList.appendChild(picturesNode);
 
 var bigPicture = document.querySelector('.big-picture');
 bigPicture.classList.remove('hidden');
 
 var showBigPicture = function (photoData) {
-  document.querySelector('.big-picture__img').src = photoData.url;
-  document.querySelector('.likes-count').textContent = photoData.likes;
-  document.querySelector('.comments-count').textContent = photoData.comments.length;
-  document.querySelector('.social__caption').textContent = photoData.description;
+  bigPictureImg.src = photoData.url;
+  likesCount.textContent = photoData.likes;
+  commentsCount.textContent = photoData.comments.length;
+  socialCaption.textContent = photoData.description;
 
-  var commentsItems = document.querySelectorAll('.social__comment');
+  var fragment = document.createDocumentFragment();
 
-  commentsItems.forEach(function (elem, i) {
-    if (typeof photoData.comments[i] === 'object') {
-      elem.querySelector('.social__picture').src = photoData.comments[i].avatar;
-      elem.querySelector('.social__picture').alt = photoData.comments[i].name;
-      elem.querySelector('.social__text').textContent = photoData.comments[i].message;
-    }
+  photoData.comments.forEach(function (elem) {
+    var newComment = comment.cloneNode(true);
+    newComment.querySelector('.social__picture').src = elem.avatar;
+    newComment.querySelector('.social__picture').alt = elem.name;
+    newComment.querySelector('.social__text').textContent = elem.message;
+    fragment.appendChild(newComment);
   });
+
+  commentsList.innerHTML = '';
+  commentsList.appendChild(fragment);
 };
 
 showBigPicture(photosData[0]);
