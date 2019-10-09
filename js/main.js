@@ -226,7 +226,7 @@ var setImageEffect = function (effect) {
   imgUploadPreview.classList.add('effects__preview--' + effect);
 };
 
-var effectsRadioChangeHandler = function (evt) { // rename
+var effectsRadioChangeHandler = function (evt) {
   effectName = evt.target.value;
   imgUploadPreview.style.filter = ''; // !
   setImageEffect(effectName);
@@ -237,11 +237,6 @@ var effectsRadioChangeHandler = function (evt) { // rename
   }
 };
 
-//
-// var getValueTargetInput = function (func) {
-//   func(evt.target.value);
-// };
-
 hiddenSlider();
 
 effectsList.addEventListener('change', effectsRadioChangeHandler);
@@ -249,3 +244,41 @@ effectsList.addEventListener('change', effectsRadioChangeHandler);
 effectLevelPin.addEventListener('mouseup', function () {
   getValueFromPinPosition(effectName);
 });
+
+// Редактирование размера изображения
+
+var scaleControlSmaller = document.querySelector('.scale__control--smaller');
+var scaleControlBigger = document.querySelector('.scale__control--bigger');
+var scaleControlValue = document.querySelector('.scale__control--value');
+
+var scaleControlValueStep = 25;
+var maxScaleControlValue = 100;
+var minScaleControlValue = 25;
+
+var getScaleControlValue = function () {
+  var value = scaleControlValue.value;
+  return value.split('%').join('');
+};
+
+var setScaleControlValue = function (value) {
+  if (value > maxScaleControlValue) {
+    value = maxScaleControlValue;
+  }
+  if (value < minScaleControlValue) {
+    value = minScaleControlValue;
+  }
+  scaleControlValue.value = value;
+};
+
+var scaleControlSmallerClickHandler = function () {
+  var value = getScaleControlValue() - scaleControlValueStep;
+  setScaleControlValue(value);
+};
+
+var scaleControlBiggerClickHandler = function () {
+  var value = getScaleControlValue() + scaleControlValueStep;
+  setScaleControlValue(value);
+};
+
+scaleControlSmaller.addEventListener('click', scaleControlSmallerClickHandler);
+scaleControlBigger.addEventListener('click', scaleControlBiggerClickHandler);
