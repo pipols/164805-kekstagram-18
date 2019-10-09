@@ -257,10 +257,11 @@ var minScaleControlValue = 25;
 
 var getScaleControlValue = function () {
   var value = scaleControlValue.value;
-  return value.split('%').join('');
+  return +value.split('%').join('');
 };
 
 var setScaleControlValue = function (value) {
+
   if (value > maxScaleControlValue) {
     value = maxScaleControlValue;
   }
