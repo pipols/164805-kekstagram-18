@@ -77,6 +77,7 @@ var imgUploadCancel = document.querySelector('.img-upload__cancel');
 var effectLevelPin = document.querySelector('.effect-level__pin');
 var effectLevelLine = document.querySelector('.effect-level__line');
 var imgUploadPreview = document.querySelector('.img-upload__preview img');
+var imgUploadPreviewWrap = document.querySelector('.img-upload__preview');
 
 var getRandomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -254,6 +255,11 @@ var scaleControlValue = document.querySelector('.scale__control--value');
 var scaleControlValueStep = 25;
 var maxScaleControlValue = 100;
 var minScaleControlValue = 25;
+var defaultScaleControlValue = 100;
+
+var setImgUploadPreviewTransformStyle = function (value) {
+  imgUploadPreviewWrap.style.transform = 'scale' + '(' + (value / 100) + ')';
+};
 
 var getScaleControlValue = function () {
   var value = scaleControlValue.value;
@@ -261,7 +267,6 @@ var getScaleControlValue = function () {
 };
 
 var setScaleControlValue = function (value) {
-
   if (value > maxScaleControlValue) {
     value = maxScaleControlValue;
   }
@@ -269,6 +274,7 @@ var setScaleControlValue = function (value) {
     value = minScaleControlValue;
   }
   scaleControlValue.value = value;
+  setImgUploadPreviewTransformStyle(value);
 };
 
 var scaleControlSmallerClickHandler = function () {
@@ -280,6 +286,8 @@ var scaleControlBiggerClickHandler = function () {
   var value = getScaleControlValue() + scaleControlValueStep;
   setScaleControlValue(value);
 };
+
+setScaleControlValue(defaultScaleControlValue);
 
 scaleControlSmaller.addEventListener('click', scaleControlSmallerClickHandler);
 scaleControlBigger.addEventListener('click', scaleControlBiggerClickHandler);
