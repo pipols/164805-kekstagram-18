@@ -78,6 +78,7 @@ var effectLevelPin = document.querySelector('.effect-level__pin');
 var effectLevelLine = document.querySelector('.effect-level__line');
 var imgUploadPreview = document.querySelector('.img-upload__preview img');
 var imgUploadPreviewWrap = document.querySelector('.img-upload__preview');
+var imgUploadForm = document.querySelector('.img-upload__form');
 
 var getRandomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -291,3 +292,71 @@ setScaleControlValue(defaultScaleControlValue);
 
 scaleControlSmaller.addEventListener('click', scaleControlSmallerClickHandler);
 scaleControlBigger.addEventListener('click', scaleControlBiggerClickHandler);
+
+// Валидация хеш-тегов
+
+imgUploadForm.action = 'https://js.dump.academy/kekstagram'; //
+
+var HASHTAG_VALIDATION_MESSAGE = {
+  firstSymbol: 'хэш-тег должен начинатся с символа # (решётка)',
+  notOnlyHash: 'хеш-тег не может состоять только из одной решётки',
+  spaceRequire: 'хеш-теги должны разделяться пробелами',
+  unique: 'один и тот же хэш-тег не может быть использован дважды',
+  toMany: 'Нельзя указать больше пяти хэш-тегов',
+  toLong: 'максимальная длина одного хэш-тега 20 символов, включая решётку'
+};
+
+var textHashtags = document.querySelector('.text__hashtags');
+
+var identical = function (arr) {
+  arr.sort();
+  for (var i = 0; i < arr.length - 1; i++) {
+    if (arr[i] === arr[i + 1]) {
+      return true;
+    }
+  }
+  return false;
+};
+
+var hashtagsValidation = function (hashtags) {
+  var result = hashtags.trim().toLowerCase().split(' ');
+
+  result.forEach(function (elem) { // 1!
+    if (elem.charAt(0) !== '#') {
+      textHashtags.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.firstSymbol);
+    }
+  });
+
+  result.forEach(function (elem) { // 2!
+    if (elem.length === 1 && elem.charAt(0) === '#') {
+      textHashtags.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.notOnlyHash);
+    }
+  });
+
+  result.forEach(function (elem) { // 3!
+    if (elem.split('#').length > 2) {
+      textHashtags.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.spaceRequire);
+    }
+  });
+
+  if (identical(result)) {
+    textHashtags.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.unique);
+  }
+
+  if (result.length > 5) { // 5!
+    textHashtags.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.toMany);
+  }
+
+  result.forEach(function (elem) {
+    if (elem.length > 20) {
+      textHashtags.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.toLong);
+    }
+  });
+};
+
+var hashtagsInputHandler = function (evt) {
+  var hashtags = evt.target.value;
+  hashtagsValidation(hashtags);
+};
+
+textHashtags.addEventListener('input', hashtagsInputHandler);
