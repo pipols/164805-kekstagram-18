@@ -360,3 +360,24 @@ var hashtagsInputHandler = function (evt) {
 };
 
 textHashtags.addEventListener('input', hashtagsInputHandler);
+
+// валидация комментария
+
+var textDescription = document.querySelector('.text__description');
+
+var DESCRIPTION_VALIDATION_MESSAGE = {
+  toLong: 'длина комментария не может составлять больше 140 символов'
+};
+
+var descriptionValidation = function (message) {
+  if (message.length > 140) {
+    textDescription.setCustomValidity(DESCRIPTION_VALIDATION_MESSAGE.toLong);
+  }
+};
+
+var descriptionInputHandler = function (evt) {
+  var message = evt.target.value;
+  descriptionValidation(message);
+};
+
+textDescription.addEventListener('input', descriptionInputHandler);
