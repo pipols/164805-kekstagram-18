@@ -153,6 +153,14 @@ showBigPicture(photosData[0]);
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.comments-loader').classList.add('visually-hidden');
 
+var focusTextHashtags = function () {
+  return (document.activeElement === textHashtags ? true : false);
+};
+
+var focusTextDescription = function () {
+  return (document.activeElement === textDescription ? true : false);
+};
+
 var closeImageUploadOverlay = function () {
   imgUploadOverlay.classList.add('hidden');
   imgUploadCancel.removeEventListener('keydown', imgUploadOverlayEnterHandler);
@@ -181,7 +189,7 @@ var imgUploadOverlayEnterHandler = function (evt) {
 };
 
 var imgUploadOverlayEscHandler = function (evt) {
-  if (evt.keyCode === KeyCode.ESC) {
+  if (evt.keyCode === KeyCode.ESC && !focusTextHashtags() && !focusTextDescription()) {
     closeImageUploadOverlay();
   }
 };
