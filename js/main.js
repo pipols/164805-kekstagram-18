@@ -50,7 +50,7 @@ var EFFECT_FILTER_VALUE_RANGE = {
     unit: 'px'
   },
   brightness: {
-    min: 0,
+    min: 1,
     max: 3,
     default: 1,
     unit: ''
@@ -153,17 +153,16 @@ showBigPicture(photosData[0]);
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.comments-loader').classList.add('visually-hidden');
 
-var focusTextHashtags = function () {
-  return (document.activeElement === textHashtags ? true : false);
+var focusTextHashtags = function () { //
+  return (document.activeElement === textHashtagsField);
 };
 
-var focusTextDescription = function () {
-  return (document.activeElement === textDescription ? true : false);
+var focusTextDescription = function () { //
+  return (document.activeElement === textDescription);
 };
 
 var closeImageUploadOverlay = function () {
   imgUploadOverlay.classList.add('hidden');
-  imgUploadCancel.removeEventListener('keydown', imgUploadOverlayEnterHandler);
   document.removeEventListener('keydown', imgUploadOverlayEscHandler);
   uploadFile.value = '';
 };
@@ -181,13 +180,6 @@ imgUploadCancel.addEventListener('click', function () {
   closeImageUploadOverlay();
 });
 
-
-var imgUploadOverlayEnterHandler = function (evt) {
-  if (evt.keyCode === KeyCode.ENTER) {
-    closeImageUploadOverlay();
-  }
-};
-
 var imgUploadOverlayEscHandler = function (evt) {
   if (evt.keyCode === KeyCode.ESC && !focusTextHashtags() && !focusTextDescription()) {
     closeImageUploadOverlay();
@@ -196,15 +188,14 @@ var imgUploadOverlayEscHandler = function (evt) {
 
 // ////////
 
-imgUploadCancel.addEventListener('keydown', imgUploadOverlayEnterHandler);
-
 var effectsList = document.querySelector('.effects__list');
 var effectLevelValue = document.querySelector('.effect-level__value');
 var slider = document.querySelector('.img-upload__effect-level');
 
 var effectName;
+var effectClassName;
 
-var hiddenSlider = function () {
+var hideSlider = function () {
   slider.classList.add('hidden');
 };
 
@@ -221,7 +212,7 @@ var getValueFromPinPosition = function (effect) { // rename!!!
   var value;
 
   if (unit === '') {
-    value = Math.floor(valuePosition * 100) / 100;
+    value = valuePosition.toFixed(2);
   }
   if (unit === '%' || unit === 'px') {
     value = Math.floor(valuePosition);
@@ -232,22 +223,23 @@ var getValueFromPinPosition = function (effect) { // rename!!!
 };
 
 var setImageEffect = function (effect) {
-  imgUploadPreview.className = '';
-  imgUploadPreview.classList.add('effects__preview--' + effect);
+  imgUploadPreview.classList.remove(effectClassName);
+  effectClassName = 'effects__preview--' + effect;
+  imgUploadPreview.classList.add(effectClassName);
 };
 
 var effectsRadioChangeHandler = function (evt) {
   effectName = evt.target.value;
-  imgUploadPreview.style.filter = ''; // !
+  imgUploadPreview.style.filter = '';
   setImageEffect(effectName);
-  if (effectName === 'none') {
-    hiddenSlider();
+  if (effectName === EFFECT_NAME_TO_FILTER_MAP.none) {
+    hideSlider();
   } else {
     showSlider();
   }
 };
 
-hiddenSlider();
+hideSlider();
 
 effectsList.addEventListener('change', effectsRadioChangeHandler);
 
@@ -261,42 +253,41 @@ var scaleControlSmaller = document.querySelector('.scale__control--smaller');
 var scaleControlBigger = document.querySelector('.scale__control--bigger');
 var scaleControlValue = document.querySelector('.scale__control--value');
 
-var scaleControlValueStep = 25;
-var maxScaleControlValue = 100;
-var minScaleControlValue = 25;
-var defaultScaleControlValue = 100;
+var SCALE_CONTROL_VALUE_STEP = 25;
+var MAX_SCALE_CONTROL_VALUE = 100;
+var MIN_SCALE_CONTROL_VALUE = 25;
+var DEFAULT_SCALE_CONTROL_VALUE = 100;
 
 var setImgUploadPreviewTransformStyle = function (value) {
   imgUploadPreviewWrap.style.transform = 'scale' + '(' + (value / 100) + ')';
 };
 
 var getScaleControlValue = function () {
-  var value = scaleControlValue.value;
-  return +value.split('%').join('');
+  return +scaleControlValue.value.slice(0, -1);
 };
 
 var setScaleControlValue = function (value) {
-  if (value > maxScaleControlValue) {
-    value = maxScaleControlValue;
+  if (value > MAX_SCALE_CONTROL_VALUE) {
+    value = MAX_SCALE_CONTROL_VALUE;
   }
-  if (value < minScaleControlValue) {
-    value = minScaleControlValue;
+  if (value < MIN_SCALE_CONTROL_VALUE) {
+    value = MIN_SCALE_CONTROL_VALUE;
   }
-  scaleControlValue.value = value;
+  scaleControlValue.value = value + '%';
   setImgUploadPreviewTransformStyle(value);
 };
 
 var scaleControlSmallerClickHandler = function () {
-  var value = getScaleControlValue() - scaleControlValueStep;
+  var value = getScaleControlValue() - SCALE_CONTROL_VALUE_STEP;
   setScaleControlValue(value);
 };
 
 var scaleControlBiggerClickHandler = function () {
-  var value = getScaleControlValue() + scaleControlValueStep;
+  var value = getScaleControlValue() + SCALE_CONTROL_VALUE_STEP;
   setScaleControlValue(value);
 };
 
-setScaleControlValue(defaultScaleControlValue);
+setScaleControlValue(DEFAULT_SCALE_CONTROL_VALUE);
 
 scaleControlSmaller.addEventListener('click', scaleControlSmallerClickHandler);
 scaleControlBigger.addEventListener('click', scaleControlBiggerClickHandler);
@@ -314,9 +305,13 @@ var HASHTAG_VALIDATION_MESSAGE = {
   toLong: 'максимальная длина одного хэш-тега 20 символов, включая решётку'
 };
 
-var textHashtags = document.querySelector('.text__hashtags');
+var THE_MAXIMUM_LENGTH_OF_A_HASHTAGS = 5;
+var THE_MAXIMUM_LENGTH_OF_A_HASHTAG = 20;
+var THE_MAXIMUM_LENGTH_OF_THE_COMMENT = 140;
 
-var identical = function (arr) {
+var textHashtagsField = document.querySelector('.text__hashtags');
+
+var searchIdenticalValue = function (arr) {
   arr.sort();
   for (var i = 0; i < arr.length - 1; i++) {
     if (arr[i] === arr[i + 1]) {
@@ -326,48 +321,44 @@ var identical = function (arr) {
   return false;
 };
 
-var hashtagsValidation = function (hashtags) {
+var validateHashtags = function (hashtags) {
   var result = hashtags.trim().toLowerCase().split(' ');
 
-  result.forEach(function (elem) { // 1!
-    if (elem.charAt(0) !== '#') {
-      textHashtags.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.firstSymbol);
-    }
-  });
-
-  result.forEach(function (elem) { // 2!
-    if (elem.length === 1 && elem.charAt(0) === '#') {
-      textHashtags.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.notOnlyHash);
-    }
-  });
-
-  result.forEach(function (elem) { // 3!
-    if (elem.split('#').length > 2) {
-      textHashtags.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.spaceRequire);
-    }
-  });
-
-  if (identical(result)) {
-    textHashtags.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.unique);
-  }
-
-  if (result.length > 5) { // 5!
-    textHashtags.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.toMany);
-  }
-
   result.forEach(function (elem) {
-    if (elem.length > 20) {
-      textHashtags.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.toLong);
+    textHashtagsField.setCustomValidity('');
+
+    if (elem.charAt(0) !== '#') {
+      textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.firstSymbol);
+    }
+
+    if (elem.length === 1 && elem.charAt(0) === '#') {
+      textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.notOnlyHash);
+    }
+
+    if (elem.split('#').length > 2) {
+      textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.spaceRequire);
+    }
+
+    if (searchIdenticalValue(result)) {
+      textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.unique);
+    }
+
+    if (result.length > THE_MAXIMUM_LENGTH_OF_A_HASHTAGS) {
+      textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.toMany);
+    }
+
+    if (elem.length > THE_MAXIMUM_LENGTH_OF_A_HASHTAG) {
+      textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.toLong);
     }
   });
 };
 
 var hashtagsInputHandler = function (evt) {
   var hashtags = evt.target.value;
-  hashtagsValidation(hashtags);
+  validateHashtags(hashtags);
 };
 
-textHashtags.addEventListener('input', hashtagsInputHandler);
+textHashtagsField.addEventListener('input', hashtagsInputHandler);
 
 // валидация комментария
 
@@ -378,7 +369,9 @@ var DESCRIPTION_VALIDATION_MESSAGE = {
 };
 
 var descriptionValidation = function (message) {
-  if (message.length > 140) {
+  textDescription.setCustomValidity('');
+
+  if (message.length > THE_MAXIMUM_LENGTH_OF_THE_COMMENT) {
     textDescription.setCustomValidity(DESCRIPTION_VALIDATION_MESSAGE.toLong);
   }
 };
