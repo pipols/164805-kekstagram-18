@@ -153,11 +153,11 @@ showBigPicture(photosData[0]);
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.comments-loader').classList.add('visually-hidden');
 
-var focusTextHashtags = function () { //
+var isFocusedTextHashtags = function () { //
   return (document.activeElement === textHashtagsField);
 };
 
-var focusTextDescription = function () { //
+var isFocusedTextDescription = function () { //
   return (document.activeElement === textDescription);
 };
 
@@ -181,7 +181,7 @@ imgUploadCancel.addEventListener('click', function () {
 });
 
 var imgUploadOverlayEscHandler = function (evt) {
-  if (evt.keyCode === KeyCode.ESC && !focusTextHashtags() && !focusTextDescription()) {
+  if (evt.keyCode === KeyCode.ESC && !isFocusedTextHashtags() && !isFocusedTextDescription()) {
     closeImageUploadOverlay();
   }
 };
@@ -193,7 +193,7 @@ var effectLevelValue = document.querySelector('.effect-level__value');
 var slider = document.querySelector('.img-upload__effect-level');
 
 var effectName;
-var effectClassName;
+var previousEffectName;
 
 var hideSlider = function () {
   slider.classList.add('hidden');
@@ -203,7 +203,7 @@ var showSlider = function () {
   slider.classList.remove('hidden');
 };
 
-var getValueFromPinPosition = function (effect) { // rename!!!
+var getValueFromPinPosition = function (effect) {
   var widthLine = effectLevelLine.offsetWidth;
   var pinPosition = effectLevelPin.offsetLeft;
   var effectStyleName = EFFECT_NAME_TO_FILTER_MAP[effect];
@@ -222,10 +222,10 @@ var getValueFromPinPosition = function (effect) { // rename!!!
   imgUploadPreview.style.filter = EFFECT_NAME_TO_FILTER_MAP[effect] + '(' + value + unit + ')';
 };
 
-var setImageEffect = function (effect) {
-  imgUploadPreview.classList.remove(effectClassName);
-  effectClassName = 'effects__preview--' + effect;
-  imgUploadPreview.classList.add(effectClassName);
+var setImageEffect = function (currentEffect) {
+  imgUploadPreview.classList.remove(previousEffectName);
+  previousEffectName = 'effects__preview--' + currentEffect;
+  imgUploadPreview.classList.add(previousEffectName);
 };
 
 var effectsRadioChangeHandler = function (evt) {
