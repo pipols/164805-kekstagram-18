@@ -28,19 +28,19 @@ var EFFECT_FILTER_VALUE_RANGE = {
   grayscale: {
     min: 0,
     max: 1,
-    default: 0,
+    default: 1,
     unit: ''
   },
   sepia: {
     min: 0,
     max: 1,
-    default: 0,
+    default: 1,
     unit: ''
   },
   invert: {
     min: 0,
     max: 100,
-    default: 0,
+    default: 100,
     unit: '%'
   },
   blur: {
@@ -62,6 +62,11 @@ var KeyCode = {
   ESC: 27,
   ENTER: 13
 };
+
+var SCALE_CONTROL_VALUE_STEP = 25;
+var MAX_SCALE_CONTROL_VALUE = 100;
+var MIN_SCALE_CONTROL_VALUE = 25;
+var DEFAULT_SCALE_CONTROL_VALUE = 100;
 
 var pictureTemplate = document.querySelector('#picture').content;
 var picturesList = document.querySelector('.pictures');
@@ -165,10 +170,13 @@ var closeImageUploadOverlay = function () {
   imgUploadOverlay.classList.add('hidden');
   document.removeEventListener('keydown', imgUploadOverlayEscHandler);
   uploadFile.value = '';
+  imgUploadPreview.style.filter = '';
+  imgUploadPreviewWrap.style.transform = '';
 };
 
 var openImageUploadOverlay = function () {
   imgUploadOverlay.classList.remove('hidden');
+  setScaleControlValue(DEFAULT_SCALE_CONTROL_VALUE);
   document.addEventListener('keydown', imgUploadOverlayEscHandler);
 };
 
@@ -218,8 +226,15 @@ var getValueFromPinPosition = function (effect) {
     value = Math.floor(valuePosition);
   }
 
-  effectLevelValue.value = value; // ¯\(°_o)/¯
+  effectLevelValue.value = value;
   imgUploadPreview.style.filter = EFFECT_NAME_TO_FILTER_MAP[effect] + '(' + value + unit + ')';
+};
+
+var setDefaultImageEffect = function (effect) {
+  var property = EFFECT_NAME_TO_FILTER_MAP[effect];
+  var value = EFFECT_FILTER_VALUE_RANGE[property].default;
+  var unit = EFFECT_FILTER_VALUE_RANGE[property].unit;
+  imgUploadPreview.style.filter = property + '(' + value + unit + ')';
 };
 
 var setImageEffect = function (currentEffect) {
@@ -230,7 +245,7 @@ var setImageEffect = function (currentEffect) {
 
 var effectsRadioChangeHandler = function (evt) {
   effectName = evt.target.value;
-  imgUploadPreview.style.filter = '';
+  setDefaultImageEffect(effectName);
   setImageEffect(effectName);
   if (effectName === EFFECT_NAME_TO_FILTER_MAP.none) {
     hideSlider();
@@ -252,11 +267,6 @@ effectLevelPin.addEventListener('mouseup', function () {
 var scaleControlSmaller = document.querySelector('.scale__control--smaller');
 var scaleControlBigger = document.querySelector('.scale__control--bigger');
 var scaleControlValue = document.querySelector('.scale__control--value');
-
-var SCALE_CONTROL_VALUE_STEP = 25;
-var MAX_SCALE_CONTROL_VALUE = 100;
-var MIN_SCALE_CONTROL_VALUE = 25;
-var DEFAULT_SCALE_CONTROL_VALUE = 100;
 
 var setImgUploadPreviewTransformStyle = function (value) {
   imgUploadPreviewWrap.style.transform = 'scale' + '(' + (value / 100) + ')';
@@ -287,8 +297,6 @@ var scaleControlBiggerClickHandler = function () {
   setScaleControlValue(value);
 };
 
-setScaleControlValue(DEFAULT_SCALE_CONTROL_VALUE);
-
 scaleControlSmaller.addEventListener('click', scaleControlSmallerClickHandler);
 scaleControlBigger.addEventListener('click', scaleControlBiggerClickHandler);
 
@@ -312,9 +320,9 @@ var THE_MAXIMUM_LENGTH_OF_THE_COMMENT = 140;
 var textHashtagsField = document.querySelector('.text__hashtags');
 
 var searchIdenticalValue = function (arr) {
-  arr.sort();
-  for (var i = 0; i < arr.length - 1; i++) {
-    if (arr[i] === arr[i + 1]) {
+  var sortedArr = arr.slice().sort();
+  for (var i = 0; i < sortedArr.length - 1; i++) {
+    if (sortedArr[i] === sortedArr[i + 1]) {
       return true;
     }
   }
@@ -324,6 +332,14 @@ var searchIdenticalValue = function (arr) {
 var validateHashtags = function (hashtags) {
   var result = hashtags.trim().toLowerCase().split(' ');
 
+  if (searchIdenticalValue(result)) {
+    textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.unique);
+  }
+
+  if (result.length > THE_MAXIMUM_LENGTH_OF_A_HASHTAGS) {
+    textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.toMany);
+  }
+
   result.forEach(function (elem) {
     textHashtagsField.setCustomValidity('');
 
@@ -331,20 +347,12 @@ var validateHashtags = function (hashtags) {
       textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.firstSymbol);
     }
 
-    if (elem.length === 1 && elem.charAt(0) === '#') {
+    if (elem.length === 1) {
       textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.notOnlyHash);
     }
 
     if (elem.split('#').length > 2) {
       textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.spaceRequire);
-    }
-
-    if (searchIdenticalValue(result)) {
-      textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.unique);
-    }
-
-    if (result.length > THE_MAXIMUM_LENGTH_OF_A_HASHTAGS) {
-      textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.toMany);
     }
 
     if (elem.length > THE_MAXIMUM_LENGTH_OF_A_HASHTAG) {
