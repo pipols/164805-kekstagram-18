@@ -330,6 +330,8 @@ var searchIdenticalValue = function (arr) {
 };
 
 var validateHashtags = function (hashtags) {
+  textHashtagsField.setCustomValidity('');
+
   var result = hashtags.trim().toLowerCase().split(' ');
 
   if (searchIdenticalValue(result)) {
@@ -341,8 +343,6 @@ var validateHashtags = function (hashtags) {
   }
 
   result.forEach(function (elem) {
-    textHashtagsField.setCustomValidity('');
-
     if (elem.charAt(0) !== '#') {
       textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.firstSymbol);
     }
