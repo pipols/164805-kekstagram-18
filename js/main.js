@@ -332,7 +332,7 @@ var searchIdenticalValue = function (arr) {
 var validateHashtags = function (hashtags) {
   textHashtagsField.setCustomValidity('');
 
-  var result = hashtags.trim().toLowerCase().split(' ');
+  var result = hashtags.trim().toLowerCase().split(' ').filter(Boolean);
 
   if (searchIdenticalValue(result)) {
     textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.unique);
