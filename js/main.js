@@ -347,7 +347,7 @@ var validateHashtags = function (hashtags) {
       textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.firstSymbol);
     }
 
-    if (elem.length === 1) {
+    if (elem.length === 1 && elem.charAt(0) === '#') {
       textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.notOnlyHash);
     }
 
