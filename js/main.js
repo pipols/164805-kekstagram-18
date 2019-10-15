@@ -158,17 +158,19 @@ showBigPicture(photosData[0]);
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.comments-loader').classList.add('visually-hidden');
 
-var isFocusedTextHashtags = function () { //
+var isFocusedTextHashtags = function () {
   return (document.activeElement === textHashtagsField);
 };
 
-var isFocusedTextDescription = function () { //
+var isFocusedTextDescription = function () {
   return (document.activeElement === textDescription);
 };
 
 var closeImageUploadOverlay = function () {
   imgUploadOverlay.classList.add('hidden');
   document.removeEventListener('keydown', imgUploadOverlayEscHandler);
+  setImageEffect(EFFECT_NAME_TO_FILTER_MAP.none);
+  hideSlider();
   uploadFile.value = '';
   imgUploadPreview.style.filter = '';
   imgUploadPreviewWrap.style.transform = '';
@@ -231,10 +233,14 @@ var getValueFromPinPosition = function (effect) {
 };
 
 var setDefaultImageEffect = function (effect) {
-  var property = EFFECT_NAME_TO_FILTER_MAP[effect];
-  var value = EFFECT_FILTER_VALUE_RANGE[property].default;
-  var unit = EFFECT_FILTER_VALUE_RANGE[property].unit;
-  imgUploadPreview.style.filter = property + '(' + value + unit + ')';
+  if (effect === 'none') {
+    imgUploadPreview.style.filter = 'none';
+  } else {
+    var property = EFFECT_NAME_TO_FILTER_MAP[effect];
+    var value = EFFECT_FILTER_VALUE_RANGE[property].default;
+    var unit = EFFECT_FILTER_VALUE_RANGE[property].unit;
+    imgUploadPreview.style.filter = property + '(' + value + unit + ')';
+  }
 };
 
 var setImageEffect = function (currentEffect) {
@@ -319,10 +325,10 @@ var THE_MAXIMUM_LENGTH_OF_THE_COMMENT = 140;
 
 var textHashtagsField = document.querySelector('.text__hashtags');
 
-var searchIdenticalValue = function (arr) {
-  var sortedArr = arr.slice().sort();
-  for (var i = 0; i < sortedArr.length - 1; i++) {
-    if (sortedArr[i] === sortedArr[i + 1]) {
+var searchIdenticalValue = function (hashtags) {
+  var sortedHashtags = hashtags.slice().sort();
+  for (var i = 0; i < sortedHashtags.length - 1; i++) {
+    if (sortedHashtags[i] === sortedHashtags[i + 1]) {
       return true;
     }
   }
