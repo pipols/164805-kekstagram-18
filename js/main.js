@@ -46,13 +46,13 @@ var EFFECT_FILTER_VALUE_RANGE = {
   blur: {
     min: 0,
     max: 3,
-    default: 0,
+    default: 3,
     unit: 'px'
   },
   brightness: {
     min: 1,
     max: 3,
-    default: 1,
+    default: 3,
     unit: ''
   }
 };
@@ -72,7 +72,7 @@ var pictureTemplate = document.querySelector('#picture').content;
 var picturesList = document.querySelector('.pictures');
 var commentsList = document.querySelector('.social__comments');
 var comment = document.querySelector('.social__comment');
-var bigPictureImg = document.querySelector('.big-picture__img');
+var bigPictureImg = document.querySelector('.big-picture__img img');
 var likesCount = document.querySelector('.likes-count');
 var commentsCount = document.querySelector('.comments-count');
 var socialCaption = document.querySelector('.social__caption');
@@ -84,6 +84,7 @@ var effectLevelLine = document.querySelector('.effect-level__line');
 var imgUploadPreview = document.querySelector('.img-upload__preview img');
 var imgUploadPreviewWrap = document.querySelector('.img-upload__preview');
 var imgUploadForm = document.querySelector('.img-upload__form');
+var bigPicture = document.querySelector('.big-picture');
 
 var getRandomInteger = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -112,9 +113,10 @@ var getPhotosData = function (amount) {
 
 var photosData = getPhotosData(AMOUNT_DESCRIPTIONS);
 
-var getPhotoNode = function (template, photoData) {
+var getPhotoNode = function (template, photoData, counter) {
   var newNode = template.cloneNode(true);
   newNode.querySelector('.picture__img').src = photoData.url;
+  newNode.querySelector('.picture__img').setAttribute('data-image_number', counter);
   newNode.querySelector('.picture__likes').textContent = photoData.likes;
   newNode.querySelector('.picture__comments').textContent = photoData.comments.length;
   return newNode;
@@ -123,7 +125,7 @@ var getPhotoNode = function (template, photoData) {
 var accumulateNode = function (amount) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < amount; i++) {
-    var newNode = getPhotoNode(pictureTemplate, photosData[i]);
+    var newNode = getPhotoNode(pictureTemplate, photosData[i], i);
     fragment.appendChild(newNode);
   }
   return fragment;
@@ -133,7 +135,7 @@ var picturesNode = accumulateNode(AMOUNT_DESCRIPTIONS);
 
 picturesList.appendChild(picturesNode);
 
-var showBigPicture = function (photoData) {
+var renderBigPicture = function (photoData) {
   bigPictureImg.src = photoData.url;
   likesCount.textContent = photoData.likes;
   commentsCount.textContent = photoData.comments.length;
@@ -153,7 +155,6 @@ var showBigPicture = function (photoData) {
   commentsList.appendChild(fragment);
 };
 
-showBigPicture(photosData[0]);
 
 document.querySelector('.social__comment-count').classList.add('visually-hidden');
 document.querySelector('.comments-loader').classList.add('visually-hidden');
@@ -396,3 +397,46 @@ var descriptionInputHandler = function (evt) {
 };
 
 textDescription.addEventListener('input', descriptionInputHandler);
+
+// просмотра любой фотографии в полноразмерном режиме
+
+var pictures = document.querySelector('.pictures');
+var pictureImageClassName = 'picture__img';
+var pictureClassName = 'picture';
+var bigPictureCancel = document.querySelector('.big-picture__cancel');
+
+var pictureImageClickHandler = function (evt) {
+  var number;
+  if (evt.target.classList.contains(pictureClassName)) {
+    number = evt.target.querySelector('.picture__img').dataset.image_number;
+  } else if (evt.target.classList.contains(pictureImageClassName)) {
+    number = evt.target.dataset.image_number; // imageNumber
+  } else {
+    return;
+  }
+  renderBigPicture(photosData[number]);
+  openBigPicture();
+};
+
+var openBigPicture = function () {
+  bigPicture.classList.remove('hidden');
+  window.addEventListener('keydown', bigPictureEscHandler);
+};
+
+var closeBigPicture = function () {
+  bigPicture.classList.add('hidden');
+  window.removeEventListener('keydown', bigPictureEscHandler);
+};
+
+var bigPictureEscHandler = function (evt) {
+  if (evt.keyCode === KeyCode.ESC) {
+    closeBigPicture();
+  }
+};
+
+var bigPictureCancelClickHandler = function () {
+  bigPicture.classList.add('hidden');
+};
+
+pictures.addEventListener('click', pictureImageClickHandler);
+bigPictureCancel.addEventListener('click', bigPictureCancelClickHandler);
