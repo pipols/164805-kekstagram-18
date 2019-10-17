@@ -405,11 +405,16 @@ var pictureImageClassName = 'picture__img';
 var bigPictureCancel = document.querySelector('.big-picture__cancel');
 
 var pictureImageClickHandler = function (evt) {
-  if (evt.target.classList.contains(pictureImageClassName)) {
-    var number = evt.target.dataset.image_number; // imageNumber
-    renderBigPicture(photosData[number]);
-    openBigPicture();
+  var number;
+  if (evt.target.classList.contains('picture')) { // !
+    number = evt.target.querySelector('.picture__img').dataset.image_number;
+  } else if (evt.target.classList.contains(pictureImageClassName)) {
+    number = evt.target.dataset.image_number; // imageNumber
+  } else {
+    return;
   }
+  renderBigPicture(photosData[number]);
+  openBigPicture();
 };
 
 var openBigPicture = function () {
