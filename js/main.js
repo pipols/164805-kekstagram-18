@@ -116,7 +116,7 @@ var photosData = getPhotosData(AMOUNT_DESCRIPTIONS);
 var getPhotoNode = function (template, photoData, counter) {
   var newNode = template.cloneNode(true);
   newNode.querySelector('.picture__img').src = photoData.url;
-  newNode.querySelector('.picture__img').setAttribute('data-image_number', counter);
+  newNode.querySelector('.picture__img').dataset.imageNumber = counter; // .setAttribute('data-image_number', counter);
   newNode.querySelector('.picture__likes').textContent = photoData.likes;
   newNode.querySelector('.picture__comments').textContent = photoData.comments.length;
   return newNode;
@@ -400,21 +400,22 @@ textDescription.addEventListener('input', descriptionInputHandler);
 
 // просмотра любой фотографии в полноразмерном режиме
 
+var PICTURE_IMAGE_CLASS_NAME = 'picture__img';
+var PICTURE_CLASS_NAME = 'picture';
+
 var pictures = document.querySelector('.pictures');
-var pictureImageClassName = 'picture__img';
-var pictureClassName = 'picture';
 var bigPictureCancel = document.querySelector('.big-picture__cancel');
 
 var pictureImageClickHandler = function (evt) {
   var number;
-  if (evt.target.classList.contains(pictureClassName)) {
-    number = evt.target.querySelector('.picture__img').dataset.image_number;
-  } else if (evt.target.classList.contains(pictureImageClassName)) {
-    number = evt.target.dataset.image_number; // imageNumber
+  if (evt.target.classList.contains(PICTURE_CLASS_NAME)) {
+    number = evt.target.querySelector('.picture__img').dataset.imageNumber;
+  } else if (evt.target.classList.contains(PICTURE_IMAGE_CLASS_NAME)) {
+    number = evt.target.dataset.imageNumber;
   } else {
     return;
   }
-  renderBigPicture(photosData[number]);
+  renderBigPicture(photosData[Number(number)]);
   openBigPicture();
 };
 
