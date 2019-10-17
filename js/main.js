@@ -402,11 +402,12 @@ textDescription.addEventListener('input', descriptionInputHandler);
 
 var pictures = document.querySelector('.pictures');
 var pictureImageClassName = 'picture__img';
+var pictureClassName = 'picture';
 var bigPictureCancel = document.querySelector('.big-picture__cancel');
 
 var pictureImageClickHandler = function (evt) {
   var number;
-  if (evt.target.classList.contains('picture')) { // !
+  if (evt.target.classList.contains(pictureClassName)) {
     number = evt.target.querySelector('.picture__img').dataset.image_number;
   } else if (evt.target.classList.contains(pictureImageClassName)) {
     number = evt.target.dataset.image_number; // imageNumber
