@@ -7,9 +7,10 @@
     ENTER: 13
   };
 
+  var PICTURE_IMAGE_CLASS_NAME = 'picture__img';
+  var PICTURE_CLASS_NAME = 'picture';
+
   var pictures = document.querySelector('.pictures');
-  var pictureImageClassName = 'picture__img';
-  var pictureClassName = 'picture';
   var bigPictureCancel = document.querySelector('.big-picture__cancel');
   var bigPicture = document.querySelector('.big-picture');
   var commentsList = document.querySelector('.social__comments');
@@ -41,14 +42,14 @@
 
   var pictureImageClickHandler = function (evt) {
     var number;
-    if (evt.target.classList.contains(pictureClassName)) {
-      number = evt.target.querySelector('.picture__img').dataset.image_number;
-    } else if (evt.target.classList.contains(pictureImageClassName)) {
-      number = evt.target.dataset.image_number; // imageNumber
+    if (evt.target.classList.contains(PICTURE_CLASS_NAME)) {
+      number = evt.target.querySelector('.picture__img').dataset.imageNumber;
+    } else if (evt.target.classList.contains(PICTURE_IMAGE_CLASS_NAME)) {
+      number = evt.target.dataset.imageNumber;
     } else {
       return;
     }
-    renderBigPicture(window.data.photosData[number]);
+    renderBigPicture(window.data.photosData[Number(number)]);
     openBigPicture();
   };
 

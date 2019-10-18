@@ -35,9 +35,9 @@
     return descriptions;
   };
 
-  var photosData = getPhotosData(AMOUNT_DESCRIPTIONS);
+  var photosData = getPhotosData(AMOUNT_DESCRIPTIONS); // переделать
 
   window.data = {
-    photosData: photosData
+    photosData: photosData // переделать
   };
 })();

@@ -9,7 +9,7 @@
   var getPhotoNode = function (template, photoData, counter) {
     var newNode = template.cloneNode(true);
     newNode.querySelector('.picture__img').src = photoData.url;
-    newNode.querySelector('.picture__img').setAttribute('data-image_number', counter);
+    newNode.querySelector('.picture__img').dataset.imageNumber = counter;
     newNode.querySelector('.picture__likes').textContent = photoData.likes;
     newNode.querySelector('.picture__comments').textContent = photoData.comments.length;
     return newNode;

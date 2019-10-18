@@ -62,7 +62,15 @@
   var imgUploadPreviewWrap = document.querySelector('.img-upload__preview');
   var textHashtagsField = document.querySelector('.text__hashtags');
   var textDescription = document.querySelector('.text__description');
+  var effectsList = document.querySelector('.effects__list');
+  var effectLevelValue = document.querySelector('.effect-level__value');
+  var slider = document.querySelector('.img-upload__effect-level');
+  var scaleControlSmaller = document.querySelector('.scale__control--smaller');
+  var scaleControlBigger = document.querySelector('.scale__control--bigger');
+  var scaleControlValue = document.querySelector('.scale__control--value');
 
+  var effectName;
+  var previousEffectName;
 
   var isFocusedTextHashtags = function () {
     return (document.activeElement === textHashtagsField);
@@ -102,13 +110,6 @@
     }
   };
 
-  var effectsList = document.querySelector('.effects__list');
-  var effectLevelValue = document.querySelector('.effect-level__value');
-  var slider = document.querySelector('.img-upload__effect-level');
-
-  var effectName;
-  var previousEffectName;
-
   var hideSlider = function () {
     slider.classList.add('hidden');
   };
@@ -128,6 +129,7 @@
     if (unit === '') {
       value = valuePosition.toFixed(2);
     }
+
     if (unit === '%' || unit === 'px') {
       value = Math.floor(valuePosition);
     }
@@ -173,10 +175,6 @@
   });
 
   // Редактирование размера изображения
-
-  var scaleControlSmaller = document.querySelector('.scale__control--smaller');
-  var scaleControlBigger = document.querySelector('.scale__control--bigger');
-  var scaleControlValue = document.querySelector('.scale__control--value');
 
   var setImgUploadPreviewTransformStyle = function (value) {
     imgUploadPreviewWrap.style.transform = 'scale' + '(' + (value / 100) + ')';
