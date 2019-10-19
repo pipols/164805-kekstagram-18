@@ -170,9 +170,68 @@
 
   effectsList.addEventListener('change', effectsRadioChangeHandler);
 
-  effectLevelPin.addEventListener('mouseup', function () {
-    getValueFromPinPosition(effectName);
-  });
+  // effectLevelPin.addEventListener('mouseup', function () {
+  //   getValueFromPinPosition(effectName);
+  // });
+
+  // ////////////////////////////////////////
+  // перемещение пина у слайдера
+
+  var leftpositionСorrection = function () {
+    var cssValue = getComputedStyle(effectLevelLine, null).left;
+    return +(cssValue.replace(/[^\d]/g, ''));
+  };
+
+  var mouseDownHandler = function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX
+    };
+
+    var mouseMoveHandler = function (moveEvt) {
+      moveEvt.preventDefault();
+      getValueFromPinPosition(effectName);
+
+      var pinMotionRestriction = {
+        x: {
+          min: effectLevelPin.offsetParent.offsetLeft - leftpositionСorrection(),
+          max: effectLevelPin.offsetParent.offsetWidth,
+        }
+      };
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX
+      };
+
+      startCoords = {
+        x: moveEvt.clientX
+      };
+
+      var positionX = effectLevelPin.offsetLeft - shift.x;
+
+      if (positionX < pinMotionRestriction.x.min) {
+        positionX = pinMotionRestriction.x.min;
+      }
+      if (positionX > pinMotionRestriction.x.max) {
+        positionX = pinMotionRestriction.x.max;
+      }
+
+      effectLevelPin.style.left = positionX + 'px';
+    };
+
+    var mouseUpHandler = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', mouseMoveHandler);
+      document.removeEventListener('mouseup', mouseUpHandler);
+    };
+
+    document.addEventListener('mousemove', mouseMoveHandler);
+    document.addEventListener('mouseup', mouseUpHandler);
+  };
+
+  effectLevelPin.addEventListener('mousedown', mouseDownHandler);
 
   // Редактирование размера изображения
 
