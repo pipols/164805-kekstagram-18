@@ -68,6 +68,7 @@
   var scaleControlSmaller = document.querySelector('.scale__control--smaller');
   var scaleControlBigger = document.querySelector('.scale__control--bigger');
   var scaleControlValue = document.querySelector('.scale__control--value');
+  var effectLevelDepth = document.querySelector('.effect-level__depth');
 
   var effectName;
   var previousEffectName;
@@ -170,16 +171,18 @@
 
   effectsList.addEventListener('change', effectsRadioChangeHandler);
 
-  // effectLevelPin.addEventListener('mouseup', function () {
-  //   getValueFromPinPosition(effectName);
-  // });
-
-  // ////////////////////////////////////////
   // перемещение пина у слайдера
 
   var leftpositionСorrection = function () {
     var cssValue = getComputedStyle(effectLevelLine, null).left;
     return +(cssValue.replace(/[^\d]/g, ''));
+  };
+
+  var setLineDepth = function () {
+    var widthLine = effectLevelLine.offsetWidth;
+    var pinPosition = effectLevelPin.offsetLeft;
+    var valuePosition = Math.floor(pinPosition / widthLine * 100);
+    effectLevelDepth.style.width = valuePosition + '%';
   };
 
   var mouseDownHandler = function (evt) {
@@ -192,7 +195,7 @@
     var mouseMoveHandler = function (moveEvt) {
       moveEvt.preventDefault();
       getValueFromPinPosition(effectName);
-
+      setLineDepth();
       var pinMotionRestriction = {
         x: {
           min: effectLevelPin.offsetParent.offsetLeft - leftpositionСorrection(),
