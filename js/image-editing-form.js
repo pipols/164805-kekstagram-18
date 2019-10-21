@@ -47,6 +47,7 @@
   var MAX_SCALE_CONTROL_VALUE = 100;
   var MIN_SCALE_CONTROL_VALUE = 25;
   var DEFAULT_SCALE_CONTROL_VALUE = 100;
+  var DEFAULT_LINE_DEPTH = '100%';
 
   var KeyCode = {
     ESC: 27,
@@ -150,6 +151,15 @@
     }
   };
 
+  var setDefaultPinPosition = function () {
+    var defaultPosition = effectLevelPin.offsetParent.clientWidth;
+    effectLevelPin.style.left = defaultPosition + 'px';
+  };
+
+  var setDefaultLineDepth = function () {
+    effectLevelDepth.style.width = DEFAULT_LINE_DEPTH;
+  };
+
   var setImageEffect = function (currentEffect) {
     imgUploadPreview.classList.remove(previousEffectName);
     previousEffectName = 'effects__preview--' + currentEffect;
@@ -164,6 +174,8 @@
       hideSlider();
     } else {
       showSlider();
+      setDefaultPinPosition();
+      setDefaultLineDepth();
     }
   };
 
@@ -172,11 +184,6 @@
   effectsList.addEventListener('change', effectsRadioChangeHandler);
 
   // перемещение пина у слайдера
-
-  var leftpositionСorrection = function () {
-    var cssValue = getComputedStyle(effectLevelLine, null).left;
-    return +(cssValue.replace(/[^\d]/g, ''));
-  };
 
   var setLineDepth = function () {
     var widthLine = effectLevelLine.offsetWidth;
@@ -192,16 +199,20 @@
       x: evt.clientX
     };
 
+    var pinMotionRestriction = {
+      x: {
+        min: effectLevelPin.offsetParent.clientLeft,
+        max: effectLevelPin.offsetParent.clientWidth
+      }
+    };
+
     var mouseMoveHandler = function (moveEvt) {
       moveEvt.preventDefault();
       getValueFromPinPosition(effectName);
       setLineDepth();
-      var pinMotionRestriction = {
-        x: {
-          min: effectLevelPin.offsetParent.offsetLeft - leftpositionСorrection(),
-          max: effectLevelPin.offsetParent.offsetWidth,
-        }
-      };
+
+      pinMotionRestriction.x.min = effectLevelPin.offsetParent.clientLeft;
+      pinMotionRestriction.x.max = effectLevelPin.offsetParent.clientWidth;
 
       var shift = {
         x: startCoords.x - moveEvt.clientX
@@ -212,7 +223,6 @@
       };
 
       var positionX = effectLevelPin.offsetLeft - shift.x;
-
       if (positionX < pinMotionRestriction.x.min) {
         positionX = pinMotionRestriction.x.min;
       }
