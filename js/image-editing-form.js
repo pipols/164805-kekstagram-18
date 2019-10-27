@@ -279,4 +279,8 @@
 
   scaleControlSmaller.addEventListener('click', scaleControlSmallerClickHandler);
   scaleControlBigger.addEventListener('click', scaleControlBiggerClickHandler);
+
+  window.imageEditingForm = {
+    closeImageUploadOverlay: closeImageUploadOverlay
+  };
 })();
