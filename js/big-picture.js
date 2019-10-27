@@ -19,6 +19,7 @@
   var likesCount = document.querySelector('.likes-count');
   var commentsCount = document.querySelector('.comments-count');
   var socialCaption = document.querySelector('.social__caption');
+  var body = document.querySelector('body');
 
   var renderBigPicture = function (photoData) {
     bigPictureImg.src = photoData.url;
@@ -55,11 +56,13 @@
 
   var openBigPicture = function () {
     bigPicture.classList.remove('hidden');
+    body.classList.add('modal-open');
     window.addEventListener('keydown', bigPictureEscHandler);
   };
 
   var closeBigPicture = function () {
     bigPicture.classList.add('hidden');
+    body.classList.remove('modal-open');
     window.removeEventListener('keydown', bigPictureEscHandler);
   };
 
@@ -71,6 +74,7 @@
 
   var bigPictureCancelClickHandler = function () {
     bigPicture.classList.add('hidden');
+    body.classList.remove('modal-open');
   };
 
   pictures.addEventListener('click', pictureImageClickHandler);
