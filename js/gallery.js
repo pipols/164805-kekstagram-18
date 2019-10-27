@@ -6,6 +6,7 @@
   var pictureTemplate = document.querySelector('#picture').content;
   var picturesList = document.querySelector('.pictures');
 
+
   var getPhotoNode = function (template, photoData, counter) {
     var newNode = template.cloneNode(true);
     newNode.querySelector('.picture__img').src = photoData.url;
@@ -15,18 +16,26 @@
     return newNode;
   };
 
-  var accumulateNode = function (amount) {
+  var accumulateNode = function (photosData, amount) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < amount; i++) {
-      var newNode = getPhotoNode(pictureTemplate, window.data.photosData[i], i);
+      var newNode = getPhotoNode(pictureTemplate, photosData[i], i);
       fragment.appendChild(newNode);
     }
     return fragment;
   };
 
-  var picturesNode = accumulateNode(AMOUNT_DESCRIPTIONS);
+  var dataSuccessHandler = function (photoData) {
+    window.data.photosData = photoData;
+    var picturesNode = accumulateNode(photoData, AMOUNT_DESCRIPTIONS);
+    picturesList.appendChild(picturesNode);
+  };
 
-  picturesList.appendChild(picturesNode);
+  var renderPictureList = function () {
+    window.backend.initRequestDownload(dataSuccessHandler);
+  };
+
+  renderPictureList();
 
   document.querySelector('.social__comment-count').classList.add('visually-hidden');
   document.querySelector('.comments-loader').classList.add('visually-hidden');
