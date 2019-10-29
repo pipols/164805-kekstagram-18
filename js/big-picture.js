@@ -2,7 +2,7 @@
 
 (function () {
   // просмотр любой фотографии в полноразмерном режиме
-  var KeyCode = {
+  var KeyCode = {//
     ESC: 27,
     ENTER: 13
   };
@@ -50,7 +50,7 @@
     } else {
       return;
     }
-    renderBigPicture(window.data.photosData[Number(number)]);
+    renderBigPicture(window.download.uploadedData[Number(number)]);
     openBigPicture();
   };
 

@@ -6,7 +6,6 @@
   var pictureTemplate = document.querySelector('#picture').content;
   var picturesList = document.querySelector('.pictures');
 
-
   var getPhotoNode = function (template, photoData, counter) {
     var newNode = template.cloneNode(true);
     newNode.querySelector('.picture__img').src = photoData.url;
@@ -25,18 +24,15 @@
     return fragment;
   };
 
-  var dataSuccessHandler = function (photoData) {
-    window.data.photosData = photoData;
-    var picturesNode = accumulateNode(photoData, AMOUNT_DESCRIPTIONS);
+  var renderGallery = function (data) {
+    var picturesNode = accumulateNode(data, AMOUNT_DESCRIPTIONS);
     picturesList.appendChild(picturesNode);
   };
 
-  var renderPictureList = function () {
-    window.backend.initRequestDownload(dataSuccessHandler);
-  };
-
-  renderPictureList();
-
   document.querySelector('.social__comment-count').classList.add('visually-hidden');
   document.querySelector('.comments-loader').classList.add('visually-hidden');
+
+  window.gallery = {
+    renderGallery: renderGallery
+  };
 })();
