@@ -4,10 +4,7 @@
 
   var imgUploadSubmitHandler = function (evt) {
     evt.preventDefault();
-    window.backend.initRequestUpload(new FormData(imgUploadForm), function () {
-      window.imageEditingForm.closeImageUploadOverlay();
-    });
-    window.alert.successMessage();
+    window.backend.upload(new FormData(imgUploadForm), window.alert.getSuccessMessage, window.alert.getUploadErrorMessage);
   };
 
   imgUploadForm.addEventListener('submit', imgUploadSubmitHandler);
