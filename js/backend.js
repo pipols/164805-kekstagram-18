@@ -6,7 +6,7 @@
   var GET_DATA = 'https://js.dump.academy/kekstagram/data';
   var REQUEST_TIMEOUT = 10000;
   var RequestStatus = {
-    ok: 200
+    OK: 200
   };
 
   var initRequest = function (onLoad, onError) {
@@ -15,7 +15,7 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === RequestStatus.ok) {
+      if (xhr.status === RequestStatus.OK) {
         onLoad(xhr.response);
       } else {
         onError('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);

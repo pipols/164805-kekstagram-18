@@ -2,7 +2,7 @@
 
 (function () {
   var KeyCode = {
-    esc: 27,
+    ESC: 27,
   };
 
   var errorTemplate = document.querySelector('#error').content;
@@ -20,7 +20,7 @@
   var closeErrorMessage = function () {
     var node = document.querySelector('.error');
     node.style.display = 'none';
-    body.removeEventListener('keydown', closeError);
+    body.removeEventListener('keydown', mainEscHandler);
   };
 
   var openErrorMessage = function (message) {
@@ -31,7 +31,7 @@
       main.appendChild(newErrorMessage);
     }
     main.addEventListener('click', errorButtonClickHandler);
-    body.addEventListener('keydown', closeError); // naming
+    body.addEventListener('keydown', mainEscHandler);
   };
 
   var errorButtonClickHandler = function (evt) {
@@ -41,31 +41,31 @@
     }
   };
 
-  var mainEscHandler = function (closingModal) { // naming
+  var getMainEscHandler = function (closingModal) {
     return function (evt) {
-      if (evt.keyCode === KeyCode.esc) {
+      if (evt.keyCode === KeyCode.ESC) {
         closingModal();
       }
     };
   };
 
-  var closeError = mainEscHandler(closeErrorMessage); // naming
+  var mainEscHandler = getMainEscHandler(closeErrorMessage);
 
   // ---------------
 
   var closeSuccessMessage = function () {
     successNode = document.querySelector('.success');
-    successNode.style.display = 'none';
+    successNode.style.display = 'none'; // node.remove
     body.removeEventListener('keydown', closeSuccess); // naming
   };
 
-  var closeSuccess = mainEscHandler(closeSuccessMessage);
+  var closeSuccess = getMainEscHandler(closeSuccessMessage);
 
-  var successButtonClickHandler = function () { // бред
+  var successButtonClickHandler = function () {
     closeSuccessMessage();
   };
 
-  var successClickHandler = function () { // бред
+  var successClickHandler = function () {
     closeSuccessMessage();
   };
 

@@ -50,7 +50,7 @@
     } else {
       return;
     }
-    renderBigPicture(window.download.uploadedData[Number(number)]);
+    renderBigPicture(window.download.data[Number(number)]);
     openBigPicture();
   };
 

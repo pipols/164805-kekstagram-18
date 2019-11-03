@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var AMOUNT_DESCRIPTIONS = 25;
 
   var pictureTemplate = document.querySelector('#picture').content;
   var picturesList = document.querySelector('.pictures');
@@ -15,17 +14,22 @@
     return newNode;
   };
 
-  var accumulateNode = function (photosData, amount) {
+  var accumulateNode = function (photosData) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < amount; i++) {
+    for (var i = 0; i < photosData.length; i++) {
       var newNode = getPhotoNode(pictureTemplate, photosData[i], i);
       fragment.appendChild(newNode);
     }
     return fragment;
   };
 
+  var clearPicturesList = function () {
+    window.util.clearNodeList('.picture');
+  };
+
   var renderGallery = function (data) {
-    var picturesNode = accumulateNode(data, AMOUNT_DESCRIPTIONS);
+    clearPicturesList();
+    var picturesNode = accumulateNode(data);
     picturesList.appendChild(picturesNode);
   };
 
