@@ -25,7 +25,6 @@
     return array;
   };
 
-  // попробовать переделать под динамический nodeList
   // https://up.htmlacademy.ru/javascript/18/criteries#b26
   var clearNodeList = function (selector) {
     document.querySelectorAll(selector).forEach(function (element) {
