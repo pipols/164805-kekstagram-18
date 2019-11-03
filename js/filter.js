@@ -23,6 +23,7 @@
 
   var randomButtonClickHandler = function () {
     var data = getRandomData();
+    window.download.filteredData = data;
     makeFiltersButtonActive(randomButton);
     window.debounce(function () {
       window.gallery.renderGallery(data);
@@ -42,6 +43,7 @@
     data.sort(function (a, b) {
       return b.comments.length - a.comments.length;
     });
+    window.download.filteredData = data;
     makeFiltersButtonActive(discussedButton);
     window.debounce(function () {
       window.gallery.renderGallery(data);
