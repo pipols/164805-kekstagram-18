@@ -9,6 +9,7 @@
 
   var PICTURE_IMAGE_CLASS_NAME = 'picture__img';
   var PICTURE_CLASS_NAME = 'picture';
+  var NUMBER_OF_COMMENTS_TO_UPLOAD = 5;
 
   var pictures = document.querySelector('.pictures');
   var bigPictureCancel = document.querySelector('.big-picture__cancel');
@@ -20,16 +21,13 @@
   var commentsCount = document.querySelector('.comments-count');
   var socialCaption = document.querySelector('.social__caption');
   var body = document.querySelector('body');
+  var commentsLoader = document.querySelector('.comments-loader');
+  var commentsData = [];
 
-  var renderBigPicture = function (photoData) {
-    bigPictureImg.src = photoData.url;
-    likesCount.textContent = photoData.likes;
-    commentsCount.textContent = photoData.comments.length;
-    socialCaption.textContent = photoData.description;
-
+  var renderComments = function () {
     var fragment = document.createDocumentFragment();
 
-    photoData.comments.forEach(function (elem) {
+    commentsData.splice(0, NUMBER_OF_COMMENTS_TO_UPLOAD).forEach(function (elem) {
       var newComment = comment.cloneNode(true);
       newComment.querySelector('.social__picture').src = elem.avatar;
       newComment.querySelector('.social__picture').alt = elem.name;
@@ -37,8 +35,27 @@
       fragment.appendChild(newComment);
     });
 
-    commentsList.innerHTML = '';
+    if (commentsData.length === 0) {
+      commentsLoader.classList.add('visually-hidden');
+    } else {
+      commentsLoader.classList.remove('visually-hidden');
+    }
+
     commentsList.appendChild(fragment);
+  };
+
+  var commentsLoaderClickHandler = function () {
+    renderComments();
+  };
+
+  var renderBigPicture = function (photoData) {
+    bigPictureImg.src = photoData.url;
+    likesCount.textContent = photoData.likes;
+    commentsCount.textContent = photoData.comments.length;
+    socialCaption.textContent = photoData.description;
+    commentsData = photoData.comments;
+    commentsList.innerHTML = '';
+    renderComments(photoData);
   };
 
   var pictureImageClickHandler = function (evt) {
@@ -79,4 +96,5 @@
 
   pictures.addEventListener('click', pictureImageClickHandler);
   bigPictureCancel.addEventListener('click', bigPictureCancelClickHandler);
+  commentsLoader.addEventListener('click', commentsLoaderClickHandler);
 })();

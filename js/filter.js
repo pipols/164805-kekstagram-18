@@ -60,6 +60,6 @@
   };
 
   window.filter = {
-    showFilters: showFilters
+    show: showFilters
   };
 })();

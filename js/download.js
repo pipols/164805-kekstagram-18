@@ -13,7 +13,7 @@
     window.gallery.renderGallery(data);
     window.download.data = data;
     window.download.filteredData = data;
-    window.filter.showFilters();
+    window.filter.show();
   };
 
   start();

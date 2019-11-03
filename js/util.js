@@ -15,7 +15,7 @@
     var randomIndex;
 
     while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
+      randomIndex = getRandomInteger(0, currentIndex);
       currentIndex -= 1;
 
       temporaryValue = array[currentIndex];
