@@ -25,10 +25,6 @@
     return array;
   };
 
-  // var objectsEqual = function (obj1, obj2) { //
-  //   return JSON.stringify(obj1) === JSON.stringify(obj2);
-  // };
-
   // попробовать переделать под динамический nodeList
   // https://up.htmlacademy.ru/javascript/18/criteries#b26
   var clearNodeList = function (selector) {

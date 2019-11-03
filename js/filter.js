@@ -6,7 +6,6 @@
 
   var imgFilters = document.querySelector('.img-filters');
   var imgFiltersButtons = document.querySelectorAll('.img-filters__button');
-
   var popularButton = document.querySelector('#filter-popular');
   var randomButton = document.querySelector('#filter-random');
   var discussedButton = document.querySelector('#filter-discussed');
@@ -24,25 +23,29 @@
 
   var randomButtonClickHandler = function () {
     var data = getRandomData();
-    window.gallery.renderGallery(data);
     makeFiltersButtonActive(randomButton);
+    window.debounce(function () {
+      window.gallery.renderGallery(data);
+    });
   };
 
   var popularButtonClickHandler = function () {
     var data = window.download.data;
-    window.gallery.renderGallery(data);
     makeFiltersButtonActive(popularButton);
+    window.debounce(function () {
+      window.gallery.renderGallery(data);
+    });
   };
 
   var discussedButtonClickHundler = function () {
     var data = window.download.data.slice();
-
     data.sort(function (a, b) {
       return b.comments.length - a.comments.length;
     });
-
-    window.gallery.renderGallery(data);
     makeFiltersButtonActive(discussedButton);
+    window.debounce(function () {
+      window.gallery.renderGallery(data);
+    });
   };
 
   popularButton.addEventListener('click', popularButtonClickHandler);
