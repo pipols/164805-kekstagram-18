@@ -32,6 +32,7 @@
 
   var popularButtonClickHandler = function () {
     var data = window.download.data;
+    window.download.filteredData = data;
     makeFiltersButtonActive(popularButton);
     window.debounce(function () {
       window.gallery.renderGallery(data);
