@@ -2,19 +2,17 @@
 
 (function () {
   window.download = {
-    uploadedData: undefined
+    data: []
+  };
+  var start = function () {
+    window.backend.download(getData, window.alert.getErrorMessage);
   };
 
   var getData = function (data) {
-    window.download.uploadedData = data;
-
-    if (!(data)) {
-      window.backend.download(getData, window.alert.getErrorMessage);
-    } else {
-      window.gallery.renderGallery(data);
-    }
+    window.gallery.renderGallery(data);
+    window.download.data = data;
+    window.filter.showFilters();
   };
 
-  getData(window.download.uploadedData);
-
+  start();
 })();
