@@ -2,7 +2,8 @@
 
 (function () {
   window.download = {
-    data: []
+    data: [],
+    filteredData: []
   };
   var start = function () {
     window.backend.download(getData, window.alert.getErrorMessage);
@@ -11,7 +12,8 @@
   var getData = function (data) {
     window.gallery.renderGallery(data);
     window.download.data = data;
-    window.filter.showFilters();
+    window.download.filteredData = data;
+    window.filter.show();
   };
 
   start();

@@ -56,10 +56,10 @@
   var closeSuccessMessage = function () {
     successNode = document.querySelector('.success');
     successNode.style.display = 'none'; // node.remove
-    body.removeEventListener('keydown', closeSuccess); // naming
+    body.removeEventListener('keydown', closeSuccessEscHandler);
   };
 
-  var closeSuccess = getMainEscHandler(closeSuccessMessage);
+  var closeSuccessEscHandler = getMainEscHandler(closeSuccessMessage);
 
   var successButtonClickHandler = function () {
     closeSuccessMessage();
@@ -80,7 +80,7 @@
     var success = document.querySelector('.success');
     successButton.addEventListener('click', successButtonClickHandler);
     success.addEventListener('click', successClickHandler);
-    body.addEventListener('keydown', closeSuccess);
+    body.addEventListener('keydown', closeSuccessEscHandler);
   };
 
   var getUploadErrorMessage = function (message) {

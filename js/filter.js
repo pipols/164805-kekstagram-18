@@ -23,6 +23,7 @@
 
   var randomButtonClickHandler = function () {
     var data = getRandomData();
+    window.download.filteredData = data;
     makeFiltersButtonActive(randomButton);
     window.debounce(function () {
       window.gallery.renderGallery(data);
@@ -31,6 +32,7 @@
 
   var popularButtonClickHandler = function () {
     var data = window.download.data;
+    window.download.filteredData = data;
     makeFiltersButtonActive(popularButton);
     window.debounce(function () {
       window.gallery.renderGallery(data);
@@ -42,6 +44,7 @@
     data.sort(function (a, b) {
       return b.comments.length - a.comments.length;
     });
+    window.download.filteredData = data;
     makeFiltersButtonActive(discussedButton);
     window.debounce(function () {
       window.gallery.renderGallery(data);
@@ -57,6 +60,6 @@
   };
 
   window.filter = {
-    showFilters: showFilters
+    show: showFilters
   };
 })();
