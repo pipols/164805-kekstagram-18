@@ -112,6 +112,7 @@
         reader.readAsDataURL(file);
       }
     }
+    imgUploadPreviewWrap.style.height = 'auto';
     imgUploadOverlay.classList.remove('hidden');
     setScaleControlValue(DEFAULT_SCALE_CONTROL_VALUE);
     document.addEventListener('keydown', imgUploadOverlayEscHandler);
