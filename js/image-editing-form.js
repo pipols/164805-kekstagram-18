@@ -71,6 +71,7 @@
   var scaleControlBigger = document.querySelector('.scale__control--bigger');
   var scaleControlValue = document.querySelector('.scale__control--value');
   var effectLevelDepth = document.querySelector('.effect-level__depth');
+  var effectsPreview = document.querySelectorAll('.effects__preview');
 
   var effectName;
   var previousEffectName;
@@ -104,6 +105,9 @@
         var reader = new FileReader();
         reader.addEventListener('load', function () {
           imgUploadPreview.src = reader.result;
+          effectsPreview.forEach(function (elem) {
+            elem.style.backgroundImage = 'url(' + reader.result + ')';
+          });
         });
         reader.readAsDataURL(file);
       }
