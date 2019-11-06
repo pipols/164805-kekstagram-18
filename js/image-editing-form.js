@@ -48,6 +48,7 @@
   var MIN_SCALE_CONTROL_VALUE = 25;
   var DEFAULT_SCALE_CONTROL_VALUE = 100;
   var DEFAULT_LINE_DEPTH = '100%';
+  var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
   var KeyCode = {
     ESC: 27,
@@ -70,6 +71,7 @@
   var scaleControlBigger = document.querySelector('.scale__control--bigger');
   var scaleControlValue = document.querySelector('.scale__control--value');
   var effectLevelDepth = document.querySelector('.effect-level__depth');
+  var effectsPreview = document.querySelectorAll('.effects__preview');
 
   var effectName;
   var previousEffectName;
@@ -93,6 +95,24 @@
   };
 
   var openImageUploadOverlay = function () {
+    var file = uploadFile.files[0];
+    if (file) {
+      var fileName = file.name.toLowerCase();
+      var matches = FILE_TYPES.some(function (it) {
+        return fileName.endsWith(it);
+      });
+      if (matches) {
+        var reader = new FileReader();
+        reader.addEventListener('load', function () {
+          imgUploadPreview.src = reader.result;
+          effectsPreview.forEach(function (elem) {
+            elem.style.backgroundImage = 'url(' + reader.result + ')';
+          });
+        });
+        reader.readAsDataURL(file);
+      }
+    }
+    imgUploadPreviewWrap.style.height = 'auto';
     imgUploadOverlay.classList.remove('hidden');
     setScaleControlValue(DEFAULT_SCALE_CONTROL_VALUE);
     document.addEventListener('keydown', imgUploadOverlayEscHandler);
