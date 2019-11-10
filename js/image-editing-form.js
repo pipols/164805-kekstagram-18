@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var EFFECT_NAME_TO_FILTER_MAP = {
+  var classNameToFilterName = {
     chrome: 'grayscale',
     sepia: 'sepia',
     marvin: 'invert',
@@ -10,7 +10,7 @@
     none: 'none'
   };
 
-  var EFFECT_FILTER_VALUE_RANGE = {
+  var filterNameToValueRange = {
     grayscale: {
       min: 0,
       max: 1,
@@ -82,7 +82,7 @@
   var closeImageUploadOverlay = function () {
     imgUploadOverlay.classList.add('hidden');
     document.removeEventListener('keydown', imgUploadOverlayEscHandler);
-    setImageEffect(EFFECT_NAME_TO_FILTER_MAP.none);
+    setImageEffect(classNameToFilterName.none);
     hideSlider();
     uploadFile.value = '';
     imgUploadPreview.style.filter = '';
@@ -140,9 +140,9 @@
   var getValueFromPinPosition = function (effect) {
     var widthLine = effectLevelLine.offsetWidth;
     var pinPosition = effectLevelPin.offsetLeft;
-    var effectStyleName = EFFECT_NAME_TO_FILTER_MAP[effect];
-    var valuePosition = pinPosition / widthLine * EFFECT_FILTER_VALUE_RANGE[effectStyleName].max;
-    var unit = EFFECT_FILTER_VALUE_RANGE[effectStyleName].unit;
+    var effectStyleName = classNameToFilterName[effect];
+    var valuePosition = pinPosition / widthLine * filterNameToValueRange[effectStyleName].max;
+    var unit = filterNameToValueRange[effectStyleName].unit;
     var value;
 
     if (unit === '') {
@@ -154,16 +154,16 @@
     }
 
     effectLevelValue.value = value;
-    imgUploadPreview.style.filter = EFFECT_NAME_TO_FILTER_MAP[effect] + '(' + value + unit + ')';
+    imgUploadPreview.style.filter = classNameToFilterName[effect] + '(' + value + unit + ')';
   };
 
   var setDefaultImageEffect = function (effect) {
     if (effect === 'none') {
       imgUploadPreview.style.filter = 'none';
     } else {
-      var property = EFFECT_NAME_TO_FILTER_MAP[effect];
-      var value = EFFECT_FILTER_VALUE_RANGE[property].default;
-      var unit = EFFECT_FILTER_VALUE_RANGE[property].unit;
+      var property = classNameToFilterName[effect];
+      var value = filterNameToValueRange[property].default;
+      var unit = filterNameToValueRange[property].unit;
       imgUploadPreview.style.filter = property + '(' + value + unit + ')';
     }
   };
@@ -187,7 +187,7 @@
     effectName = evt.target.value;
     setDefaultImageEffect(effectName);
     setImageEffect(effectName);
-    if (effectName === EFFECT_NAME_TO_FILTER_MAP.none) {
+    if (effectName === classNameToFilterName.none) {
       hideSlider();
     } else {
       showSlider();
