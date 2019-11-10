@@ -3,22 +3,22 @@
 (function () {
   // Валидация хеш-тегов
 
-  var HASHTAG_VALIDATION_MESSAGE = {
-    firstSymbol: 'хэш-тег должен начинатся с символа # (решётка)',
-    notOnlyHash: 'хеш-тег не может состоять только из одной решётки',
-    spaceRequire: 'хеш-теги должны разделяться пробелами',
-    unique: 'один и тот же хэш-тег не может быть использован дважды',
-    toMany: 'Нельзя указать больше пяти хэш-тегов',
-    toLong: 'максимальная длина одного хэш-тега 20 символов, включая решётку'
+  var HashtagValidationMessage = {
+    FIRST_SYMBOL: 'хэш-тег должен начинатся с символа # (решётка)',
+    NOT_ONLY_HASH: 'хеш-тег не может состоять только из одной решётки',
+    SPACE_REQUIRE: 'хеш-теги должны разделяться пробелами',
+    UNIQUE: 'один и тот же хэш-тег не может быть использован дважды',
+    TO_MANY: 'Нельзя указать больше пяти хэш-тегов',
+    TO_LONG: 'максимальная длина одного хэш-тега 20 символов, включая решётку'
   };
 
-  var DESCRIPTION_VALIDATION_MESSAGE = {
-    toLong: 'длина комментария не может составлять больше 140 символов'
+  var DescriptionValidationMessage = {
+    TO_LONG: 'длина комментария не может составлять больше 140 символов'
   };
 
-  var THE_MAXIMUM_LENGTH_OF_A_HASHTAGS = 5;
-  var THE_MAXIMUM_LENGTH_OF_A_HASHTAG = 20;
-  var THE_MAXIMUM_LENGTH_OF_THE_COMMENT = 140;
+  var MAX_HASHTAGS = 5;
+  var MAX_HASHTAG = 20;
+  var MAX_LENGTH_COMMENT = 140;
 
   var textHashtagsField = document.querySelector('.text__hashtags');
   var textDescription = document.querySelector('.text__description');
@@ -34,33 +34,31 @@
   };
 
   var validateHashtags = function (hashtags) {
-    textHashtagsField.setCustomValidity('');
-
     var result = hashtags.trim().toLowerCase().split(' ').filter(Boolean);
 
     if (searchIdenticalValue(result)) {
-      textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.unique);
+      textHashtagsField.setCustomValidity(HashtagValidationMessage.UNIQUE);
     }
 
-    if (result.length > THE_MAXIMUM_LENGTH_OF_A_HASHTAGS) {
-      textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.toMany);
+    if (result.length > MAX_HASHTAGS) {
+      textHashtagsField.setCustomValidity(HashtagValidationMessage.TO_MANY);
     }
 
     result.forEach(function (elem) {
       if (elem.charAt(0) !== '#') {
-        textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.firstSymbol);
+        textHashtagsField.setCustomValidity(HashtagValidationMessage.FIRST_SYMBOL);
       }
 
       if (elem.length === 1 && elem.charAt(0) === '#') {
-        textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.notOnlyHash);
+        textHashtagsField.setCustomValidity(HashtagValidationMessage.NOT_ONLY_HASH);
       }
 
       if (elem.split('#').length > 2) {
-        textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.spaceRequire);
+        textHashtagsField.setCustomValidity(HashtagValidationMessage.SPACE_REQUIRE);
       }
 
-      if (elem.length > THE_MAXIMUM_LENGTH_OF_A_HASHTAG) {
-        textHashtagsField.setCustomValidity(HASHTAG_VALIDATION_MESSAGE.toLong);
+      if (elem.length > MAX_HASHTAG) {
+        textHashtagsField.setCustomValidity(HashtagValidationMessage.TO_LONG);
       }
     });
   };
@@ -70,14 +68,11 @@
     validateHashtags(hashtags);
   };
 
-  textHashtagsField.addEventListener('input', hashtagsInputHandler);
-
   // валидация комментария
 
   var descriptionValidation = function (message) {
-    textDescription.setCustomValidity('');
-    if (message.length > THE_MAXIMUM_LENGTH_OF_THE_COMMENT) {
-      textDescription.setCustomValidity(DESCRIPTION_VALIDATION_MESSAGE.toLong);
+    if (message.length > MAX_LENGTH_COMMENT) {
+      textDescription.setCustomValidity(DescriptionValidationMessage.TO_LONG);
     }
   };
 
@@ -86,5 +81,24 @@
     descriptionValidation(message);
   };
 
-  textDescription.addEventListener('input', descriptionInputHandler);
+  var clearCustomValidity = function () {
+    textDescription.setCustomValidity('');
+    textHashtagsField.setCustomValidity('');
+  };
+
+  var addFormValidationHandler = function () {
+    textHashtagsField.addEventListener('input', hashtagsInputHandler);
+    textDescription.addEventListener('input', descriptionInputHandler);
+  };
+
+  var removeFormValidationHandler = function () {
+    textHashtagsField.removeEventListener('input', hashtagsInputHandler);
+    textDescription.removeEventListener('input', descriptionInputHandler);
+    clearCustomValidity();
+  };
+
+  window.formValidation = {
+    addFormValidationHandler: addFormValidationHandler,
+    removeFormValidationHandler: removeFormValidationHandler
+  };
 })();

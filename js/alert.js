@@ -1,10 +1,6 @@
 'use strict';
 
 (function () {
-  var KeyCode = {
-    ESC: 27,
-  };
-
   var errorTemplate = document.querySelector('#error').content;
   var newErrorMessage = errorTemplate.cloneNode(true);
 
@@ -43,7 +39,7 @@
 
   var getMainEscHandler = function (closingModal) {
     return function (evt) {
-      if (evt.keyCode === KeyCode.ESC) {
+      if (evt.keyCode === window.util.keyCode.ESC) {
         closingModal();
       }
     };

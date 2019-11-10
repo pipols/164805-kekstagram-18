@@ -7,8 +7,9 @@
 
   var getPhotoNode = function (template, photoData, counter) {
     var newNode = template.cloneNode(true);
-    newNode.querySelector('.picture__img').src = photoData.url;
-    newNode.querySelector('.picture__img').dataset.imageNumber = counter;
+    var img = newNode.querySelector('.picture__img');
+    img.src = photoData.url;
+    img.dataset.imageNumber = counter;
     newNode.querySelector('.picture__likes').textContent = photoData.likes;
     newNode.querySelector('.picture__comments').textContent = photoData.comments.length;
     return newNode;
@@ -16,10 +17,12 @@
 
   var accumulateNode = function (photosData) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < photosData.length; i++) {
-      var newNode = getPhotoNode(pictureTemplate, photosData[i], i);
+
+    photosData.forEach(function (elem, i) {
+      var newNode = getPhotoNode(pictureTemplate, elem, i);
       fragment.appendChild(newNode);
-    }
+    });
+
     return fragment;
   };
 

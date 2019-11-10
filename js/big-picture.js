@@ -2,11 +2,6 @@
 
 (function () {
   // просмотр любой фотографии в полноразмерном режиме
-  var KeyCode = {//
-    ESC: 27,
-    ENTER: 13
-  };
-
   var PICTURE_IMAGE_CLASS_NAME = 'picture__img';
   var PICTURE_CLASS_NAME = 'picture';
   var NUMBER_OF_COMMENTS_TO_SHOW = 5;
@@ -67,7 +62,7 @@
     } else {
       return;
     }
-    renderBigPicture(window.download.filteredData[Number(number)]);
+    renderBigPicture(window.download.filteredData[number]);
     openBigPicture();
   };
 
@@ -84,7 +79,7 @@
   };
 
   var bigPictureEscHandler = function (evt) {
-    if (evt.keyCode === KeyCode.ESC) {
+    if (evt.keyCode === window.util.keyCode.ESC) {
       closeBigPicture();
     }
   };

@@ -50,11 +50,6 @@
   var DEFAULT_LINE_DEPTH = '100%';
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 
-  var KeyCode = {
-    ESC: 27,
-    ENTER: 13
-  };
-
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
   var uploadFile = document.querySelector('#upload-file');
   var imgUploadCancel = document.querySelector('.img-upload__cancel');
@@ -77,11 +72,11 @@
   var previousEffectName;
 
   var isFocusedTextHashtags = function () {
-    return (document.activeElement === textHashtagsField);
+    return document.activeElement === textHashtagsField;
   };
 
   var isFocusedTextDescription = function () {
-    return (document.activeElement === textDescription);
+    return document.activeElement === textDescription;
   };
 
   var closeImageUploadOverlay = function () {
@@ -92,6 +87,7 @@
     uploadFile.value = '';
     imgUploadPreview.style.filter = '';
     imgUploadPreviewWrap.style.transform = '';
+    window.formValidation.removeFormValidationHandler();
   };
 
   var openImageUploadOverlay = function () {
@@ -116,6 +112,7 @@
     imgUploadOverlay.classList.remove('hidden');
     setScaleControlValue(DEFAULT_SCALE_CONTROL_VALUE);
     document.addEventListener('keydown', imgUploadOverlayEscHandler);
+    window.formValidation.addFormValidationHandler();
   };
 
   uploadFile.addEventListener('change', function () {
@@ -127,7 +124,7 @@
   });
 
   var imgUploadOverlayEscHandler = function (evt) {
-    if (evt.keyCode === KeyCode.ESC && !isFocusedTextHashtags() && !isFocusedTextDescription()) {
+    if (evt.keyCode === window.util.keyCode.ESC && !isFocusedTextHashtags() && !isFocusedTextDescription()) {
       closeImageUploadOverlay();
     }
   };

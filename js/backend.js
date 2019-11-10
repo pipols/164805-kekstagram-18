@@ -1,10 +1,13 @@
 'use strict';
 
 (function () {
-
-  var SEND_FORM = 'https://js.dump.academy/kekstagram';
-  var GET_DATA = 'https://js.dump.academy/kekstagram/data';
   var REQUEST_TIMEOUT = 10000;
+
+  var Url = {
+    POST: 'https://js.dump.academy/kekstagram',
+    GET: 'https://js.dump.academy/kekstagram/data'
+  };
+
   var RequestStatus = {
     OK: 200
   };
@@ -35,13 +38,13 @@
 
   var upload = function (data, onLoad, onError) {
     var xhr = initRequest(onLoad, onError);
-    xhr.open('POST', SEND_FORM);
+    xhr.open('POST', Url.POST);
     xhr.send(data);
   };
 
   var download = function (onLoad, onError) {
     var xhr = initRequest(onLoad, onError);
-    xhr.open('GET', GET_DATA);
+    xhr.open('GET', Url.GET);
     xhr.send();
   };
 
